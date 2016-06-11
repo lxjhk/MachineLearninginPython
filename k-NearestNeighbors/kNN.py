@@ -79,16 +79,34 @@ def datingClassTest():
 			errorCount +=1.0
 	print("the total error rate id :%f" % (errorCount/float(numTestVecs)))
 
+def classifyPerson():
+	percentTats = float(input("percentage of time spent playing video games?  "))
+	ffMiles = float(input("frequent flier miles earned per year?  "))
+	iceCream = float(input("liters of ice cream consumed per year?  "))
+	datingDataMat,datingLabels = file2matrix('datingTestSet.txt')
+	normMat, ranges, minVals = autoNorm(datingDataMat)
+	inArr = array([ffMiles, percentTats, iceCream])
+	classifierResult = classify0((inArr - minVals)/ranges, normMat, datingLabels, 3)
+	print(classifierResult)
 
-
+def img2vector(filename):
+	returnVect = zeros((1,1024))
+	fr = open(filename)
+	for i in range(32):
+		lineStr = fr.readline()
+		for j in range(32):
+			returnVect[0,32*i+j] = int(lineStr[j])
+	return returnVect
 
 if __name__ == "__main__":
-	group, labels = createDataSet()
+	#group, labels = createDataSet()
 	#print(classify0([10,1000], group, labels, 3))
-	datingDataMat, datingLabels = file2matrix("datingTestSet.txt")
-	datingClassTest()
+	#datingDataMat, datingLabels = file2matrix("datingTestSet.txt")
+	#datingClassTest()
+	#classifyPerson()
 
-	fig = plt.figure()
-	ax = fig.add_subplot(111)
-	ax.scatter(datingDataMat[:,1], datingDataMat[:,2], s=30, c = array(MapLabelToVal(datingLabels)))
-	plt.show()
+
+	#fig = plt.figure()
+	#ax = fig.add_subplot(111)
+	#ax.scatter(datingDataMat[:,1], datingDataMat[:,2], s=30, c = array(MapLabelToVal(datingLabels)))
+	#plt.show()
