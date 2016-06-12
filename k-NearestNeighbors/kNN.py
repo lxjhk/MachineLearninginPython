@@ -1,7 +1,8 @@
 from numpy import *
 import operator
 import matplotlib
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import os
 
 
 def createDataSet():
@@ -98,15 +99,44 @@ def img2vector(filename):
 			returnVect[0,32*i+j] = int(lineStr[j])
 	return returnVect
 
+def handwritingClassTest():
+	hwLabels = []
+	traiiningFileList = os.listdir('digits/trainingDigits')
+	m = len(traiiningFileList)
+	trainingMat = zeros((m,1024))
+	for i in range(m):
+		fileNameString = traiiningFileList[i]
+		classNumber = int(fileNameString.split('.')[0].split('_')[0])
+		hwLabels.append(classNumber)
+		trainingMat[i,:] = img2vector('digits/trainingDigits/%s' % fileNameString)
+	testFileList = os.listdir('digits/testDigits')
+	errorCount = 0.0
+	mTest = len(testFileList)
+	for i in range(mTest):
+		fileNameString = testFileList[i]
+		classNumber = int(fileNameString.split('.')[0].split('_')[0])
+		vectorUnderTest = img2vector('digits/testDigits/%s' % fileNameString)
+		classifierResult = classify0(vectorUnderTest, trainingMat, hwLabels, 3)
+		print ("The classifier comes back with %d, the real answer is %d" % (classifierResult, classNumber))
+		if (classifierResult != classNumber):
+			errorCount += 1.0
+	print ("The total number of errors is %d" % errorCount)
+	print ("The total error rate is %f" % (errorCount/mTest))
+
+
 if __name__ == "__main__":
 	#group, labels = createDataSet()
 	#print(classify0([10,1000], group, labels, 3))
+
 	#datingDataMat, datingLabels = file2matrix("datingTestSet.txt")
 	#datingClassTest()
 	#classifyPerson()
-
-
 	#fig = plt.figure()
 	#ax = fig.add_subplot(111)
 	#ax.scatter(datingDataMat[:,1], datingDataMat[:,2], s=30, c = array(MapLabelToVal(datingLabels)))
 	#plt.show()
+
+
+	#img2vector("digits/testDigits/0_1.txt")
+	#handwritingClassTest()
+
